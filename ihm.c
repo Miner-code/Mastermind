@@ -21,9 +21,39 @@ void generateCode(int code[]) {
     }
 }
 
-int checkCode(int guess[], int code[]) {
-    // La logique de vérification reste inchangée
-    // ...
+void checkCode(int guess[], int code[], int* correctPosition, int* correctColor) {
+    int tempCode[CODE_LENGTH];
+    int tempGuess[CODE_LENGTH];
+    int tempCorrectPosition = 0;
+    int tempCorrectColor = 0;
+
+    memcpy(tempCode, code, CODE_LENGTH * sizeof(int));
+    memcpy(tempGuess, guess, CODE_LENGTH * sizeof(int));
+
+    // Vérifier les positions correctes
+    for (int i = 0; i < CODE_LENGTH; i++) {
+        if (tempGuess[i] == tempCode[i]) {
+            tempCorrectPosition++;
+            tempCode[i] = 0;
+            tempGuess[i] = 0;
+        }
+    }
+
+    // Vérifier les couleurs correctes à la mauvaise place
+    for (int i = 0; i < CODE_LENGTH; i++) {
+        if (tempGuess[i] != 0) {
+            for (int j = 0; j < CODE_LENGTH; j++) {
+                if (tempGuess[i] == tempCode[j]) {
+                    tempCorrectColor++;
+                    tempCode[j] = 0;
+                    break;
+                }
+            }
+        }
+    }
+
+    *correctPosition = tempCorrectPosition;
+    *correctColor = tempCorrectColor;
 }
 
 void playGame(Player *players) {
@@ -45,7 +75,20 @@ void playGame(Player *players) {
             scanf("%d", &guess[i]);
         }
 
-        found = checkCode(guess, chooser->code);
+        int correctPosition, correctColor;
+        checkCode(guess, chooser->code, &correctPosition, &correctColor);
+
+        found = (correctPosition == CODE_LENGTH);
+
+        printf("Résultat : ");
+        for (int i = 0; i < correctPosition; i++) {
+            printf("N");
+        }
+        for (int i = 0; i < correctColor; i++) {
+            printf("B");
+        }
+        printf("\n");
+
         attempts++;
     }
 
@@ -106,4 +149,3 @@ int main() {
 
     return 0;
 }
-
