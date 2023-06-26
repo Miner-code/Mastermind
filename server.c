@@ -6,6 +6,7 @@
 #include "server.h"
 
 #define PORT 8080
+#define MESSAGE_SIZE 1024
 
 int server_fd, new_socket;
 
@@ -49,3 +50,23 @@ int acceptConnection() {
 
     return new_socket;
 }
+
+void sendMessage(int socket, const char *message) {
+    send(socket, message, strlen(message), 0);
+}
+
+void receiveMessage(int socket, char *buffer) {
+    read(socket, buffer, MESSAGE_SIZE);
+}
+
+server.h:
+
+#ifndef SERVER_H
+#define SERVER_H
+
+void initServer();
+int acceptConnection();
+void sendMessage(int socket, const char *message);
+void receiveMessage(int socket, char *buffer);
+
+#endif
