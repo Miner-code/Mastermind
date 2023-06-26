@@ -11,4 +11,3 @@ jeu_mastermind: ihm.c server.c server.h
 
 clean:
 	rm -f server jeu_mastermind
-
