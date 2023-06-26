@@ -11,6 +11,7 @@ typedef struct {
     char name[20];
     int *code;
     int turn;
+    int socket;
 } Player;
 
 void generateCode(int code[]) {
@@ -120,6 +121,7 @@ int main() {
                 printf("En attente d'autres joueurs...\n");
 
                 players[playerCount].turn = 0;
+                players[playerCount].socket = newPlayer;
 
                 // Demander le nom du joueur
                 printf("Veuillez entrer votre nom : ");
@@ -132,6 +134,12 @@ int main() {
                         players[i].code = (int *)malloc(CODE_LENGTH * sizeof(int));
                         generateCode(players[i].code);
                     }
+
+                    // Envoyer un message d'accueil aux joueurs
+                    char welcomeMessage[100];
+                    snprintf(welcomeMessage, sizeof(welcomeMessage), "Bienvenue dans le jeu Mastermind ! Les joueurs sont %s et %s.\n", players[0].name, players[1].name);
+                    sendMessage(players[0].socket, welcomeMessage);
+                    sendMessage(players[1].socket, welcomeMessage);
 
                     playGame(players);
                     playerCount = 0;
